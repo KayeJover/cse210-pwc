@@ -72,33 +72,36 @@ public class Journal
 
     
 
-    public void SaveToFile(List<Entry> _entries) 
+    public void SaveToFile(List<Entry> _entries)
+{
+    Console.WriteLine("What is the filename? ");
+    string filename = Console.ReadLine();
+
+    if (filename == "file.csv")
     {
-        Console.WriteLine("What is the filename? ");
-        string file = Console.ReadLine();
+        Console.WriteLine("Saving to file...");
 
-        if (file == "file.csv")
+        using (StreamWriter outputFile = new StreamWriter(filename, append: true))
         {
-            Console.WriteLine("Saving to file...");
-
-            string filename = "file.csv";
-
-            using (StreamWriter outputFile = new StreamWriter (filename, append: true))
+            foreach (Entry entry in _entries)
             {
-                foreach (Entry entry in _entries)
-                {
-                    outputFile.WriteLine($"{entry._promptText},{entry._entryText},{entry._date}");
-                }
+                // Format the content to handle commas and quotes properly
+                string formattedPrompt = "\"" + entry._promptText.Replace("\"", "\"\"") + "\"";
+                string formattedEntryText = "\"" + entry._entryText.Replace("\"", "\"\"") + "\"";
+                string formattedDate = "\"" + entry._date + "\"";
 
+                outputFile.WriteLine($"{formattedPrompt},{formattedEntryText},{formattedDate}");
             }
-
-            Console.WriteLine("Entries saved to file successfully.");
         }
-        else 
-            {
-                Console.WriteLine("No such filename is found.");
-            }
+
+        Console.WriteLine("Entries saved to file successfully.");
     }
+    else
+    {
+        Console.WriteLine("No such filename is found.");
+    }
+}
+
 
     public void LoadFromFile(List<Entry> _entries)
     {
