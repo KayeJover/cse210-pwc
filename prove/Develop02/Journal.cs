@@ -53,50 +53,50 @@ public class Journal
         }   while (answer != 5); 
     }
 
-    public void DisplayAll(List<Entry> _entries)
+  public void DisplayAll(List<Entry> _entries)
+{
+    if (_entries.Count == 0)
     {
-        if (_entries.Count == 0)
+        Console.WriteLine("No entries to display");
+    }
+    else
+    {
+        Console.WriteLine("Journal Entries:");
+        Console.WriteLine("--------------------");
+        foreach (Entry entry in _entries)
         {
-            Console.WriteLine("No entries to display");
-        }
-        else
-        {
-            Console.WriteLine("Journal entries: ");
-            foreach (Entry entry in _entries)
-            {
-                Console.WriteLine($"Date: {entry._date} - Prompt: {entry._promptText}");
-                Console.WriteLine($"{entry._entryText}");
-            }
+            Console.WriteLine($"Date: {entry._date}");
+            Console.WriteLine($"Prompt: {entry._promptText}");
+            Console.WriteLine($"Response: {entry._entryText}");
+            Console.WriteLine("--------------------");
         }
     }
+}
 
-    
 
-    public void SaveToFile(List<Entry> _entries)
+    // improved the process of saving and loading the journal entries
+    // utilized a csv file named "file.csv" that could be opened in Excel
+    // accounted for commas correctly in the content
+
+    public void SaveToFile(List<Entry> _entries) 
 {
     Console.WriteLine("What is the filename? ");
-    string filename = Console.ReadLine();
+    string file = Console.ReadLine();
 
-    if (filename == "file.csv")
+    if (file == "file.csv")
     {
         Console.WriteLine("Saving to file...");
 
-        using (StreamWriter outputFile = new StreamWriter(filename, append: true))
+        using (StreamWriter outputFile = new StreamWriter("file.csv", false)) // Overwrites file
         {
             foreach (Entry entry in _entries)
             {
-                // Format the content to handle commas and quotes properly
-                string formattedPrompt = "\"" + entry._promptText.Replace("\"", "\"\"") + "\"";
-                string formattedEntryText = "\"" + entry._entryText.Replace("\"", "\"\"") + "\"";
-                string formattedDate = "\"" + entry._date + "\"";
-
-                outputFile.WriteLine($"{formattedPrompt},{formattedEntryText},{formattedDate}");
+                outputFile.WriteLine($"{entry._promptText},{entry._entryText.Replace(",", "\\,")},{entry._date}");
             }
         }
-
         Console.WriteLine("Entries saved to file successfully.");
     }
-    else
+    else 
     {
         Console.WriteLine("No such filename is found.");
     }
@@ -104,31 +104,32 @@ public class Journal
 
 
     public void LoadFromFile(List<Entry> _entries)
+{
+    Console.WriteLine("What is the filename?");
+    string file = Console.ReadLine();
+
+    if (file == "file.csv")
     {
-        Console.WriteLine("What is the filename?");
-        string file = Console.ReadLine();
+        Console.WriteLine("Reading list from file...");
 
-        if (file == "file.csv")
+        string[] lines = System.IO.File.ReadAllLines("file.csv");
+        foreach (string line in lines)
         {
-            Console.WriteLine("Reading list from file...");
+            string[] parts = line.Split(',');
 
-            string filename = "file.csv";
-            string [] lines = System.IO.File.ReadAllLines(filename);
-            foreach (string line in lines)
+            Entry newEntry = new Entry
             {
-                string[] parts = line.Split(",");
+                _promptText = parts[0],
+                _entryText = parts[1].Replace("\\,", ","), // Unescape commas
+                _date = parts[2]
+            };
 
-                Entry newEntry = new Entry();
-                newEntry._promptText = parts[0];
-                newEntry._entryText = parts[1];
-                newEntry._date = parts[2];
-
-                _entries.Add(newEntry);
-            }
+            _entries.Add(newEntry);
         }
-        else 
-        {
-            Console.WriteLine("No such filename is found.");
-        }
-    }   
-}  
+    }
+    else 
+    {
+        Console.WriteLine("No such filename is found.");
+    }
+}
+}

@@ -2,7 +2,7 @@ using System;
 
 class Program
 {
-    static void Main(string[] args)
+    static void Main(string[] args1)
     {  
         Console.WriteLine("Welcome to the Journal Program!");
 
@@ -10,6 +10,6 @@ class Program
         journal.AddEntry();
     }
 
-    // improved the process of saving and loading the journal entries
-    // utilized a csv file named "file.csv" that could be opened in Excel
+    // Used csv file (named as "file.csv") as a storage for the journal entries
+    // See lines starting from line 73 on Journal.cs file
 }
