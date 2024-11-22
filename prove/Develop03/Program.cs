@@ -12,7 +12,7 @@ class Program
         while (true)
         {
             library.DisplayScriptureList();
-            Console.Write("\nPlease choose a scripture verse: "); // Adjusted this line
+            Console.Write("\nPlease choose a scripture verse: "); 
 
             string input = Console.ReadLine();
 
@@ -44,3 +44,4 @@ class Program
         }
     }
 }
+// I worked with a library of scriptures rather than a single one.

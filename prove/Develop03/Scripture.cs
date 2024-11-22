@@ -29,7 +29,7 @@ public class Scripture
         }
 
         Random random = new Random();
-        int wordsToHide = Math.Min(3, _words.Length - _hiddenWordCount); // Limit words hidden each time
+        int wordsToHide = Math.Min(3, _words.Length - _hiddenWordCount); 
 
         for (int i = 0; i < wordsToHide; i++)
         {
