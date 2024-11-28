@@ -5,7 +5,7 @@ class Program
 {
     static void Main()
     {
-        // Create videos
+
         var videos = new List<Video>
         {
             new Video("My House Tour", "Ivana Alawi", 1320),
@@ -14,7 +14,7 @@ class Program
             new Video("Fitness Hacks", "Fit Mike", 480)
         };
 
-        // Add comments to the videos
+        
         videos[0].AddComment(new Comment("Leonora", "This is the best house I’ve ever seen in Philippines."));
         videos[0].AddComment(new Comment("John", "I'm really happy miss Ivana because you finally reached the top. And there's no doubt that you deserve all the blessings!"));
         videos[0].AddComment(new Comment("Shin", "I'm currently studying fashion design, and the hermes pillow makes the ambience/the atmosphere cool."));
