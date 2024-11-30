@@ -73,61 +73,94 @@ public class Journal
     }
 }
 
-
-    // improved the process of saving and loading the journal entries
-    // utilized a csv file named "file.csv" that could be opened in Excel
-    // accounted for commas correctly in the content
-
-    public void SaveToFile(List<Entry> _entries) 
+   public void SaveToFile(List<Entry> _entries)
 {
+    if (_entries.Count == 0)
+    {
+        Console.WriteLine("No entries to save.");
+        return;
+    }
+
     Console.WriteLine("What is the filename? ");
     string file = Console.ReadLine();
 
     if (file == "file.csv")
     {
-        Console.WriteLine("Saving to file...");
+        Console.WriteLine($"Saving file to: {Path.GetFullPath("file.csv")}");
 
-        using (StreamWriter outputFile = new StreamWriter("file.csv", false)) // Overwrites file
+        
+        try
         {
-            foreach (Entry entry in _entries)
+            using (StreamWriter outputFile = new StreamWriter("file.csv", false)) 
             {
-                outputFile.WriteLine($"{entry._promptText},{entry._entryText.Replace(",", "\\,")},{entry._date}");
+                foreach (Entry entry in _entries)
+                {
+                    outputFile.WriteLine($"{entry._promptText},{entry._entryText.Replace(",", "\\,")},{entry._date}");
+                }
             }
+            Console.WriteLine("Entries saved to file successfully.");
         }
-        Console.WriteLine("Entries saved to file successfully.");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while saving: {ex.Message}");
+        }
     }
-    else 
+    else
     {
         Console.WriteLine("No such filename is found.");
     }
 }
 
 
-    public void LoadFromFile(List<Entry> _entries)
+
+public void LoadFromFile(List<Entry> _entries)
 {
     Console.WriteLine("What is the filename?");
     string file = Console.ReadLine();
 
     if (file == "file.csv")
     {
-        Console.WriteLine("Reading list from file...");
-
-        string[] lines = System.IO.File.ReadAllLines("file.csv");
-        foreach (string line in lines)
+        if (File.Exists(file))
         {
-            string[] parts = line.Split(',');
-
-            Entry newEntry = new Entry
+            try
             {
-                _promptText = parts[0],
-                _entryText = parts[1].Replace("\\,", ","), // Unescape commas
-                _date = parts[2]
-            };
+                Console.WriteLine("Reading list from file...");
+                string[] lines = File.ReadAllLines(file);
 
-            _entries.Add(newEntry);
+                foreach (string line in lines)
+                {
+                    string[] parts = line.Split(',');
+
+                    if (parts.Length == 3) // Validate CSV structure
+                    {
+                        Entry newEntry = new Entry
+                        {
+                            _promptText = parts[0],
+                            _entryText = parts[1].Replace("\\,", ","), // Unescape commas
+                            _date = parts[2]
+                        };
+
+                        _entries.Add(newEntry);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Skipping invalid line: {line}");
+                    }
+                }
+
+                Console.WriteLine("Entries loaded successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading from file: {ex.Message}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("File not found. Please check the filename and try again.");
         }
     }
-    else 
+    else
     {
         Console.WriteLine("No such filename is found.");
     }
